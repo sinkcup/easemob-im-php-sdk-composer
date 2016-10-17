@@ -1,0 +1,21 @@
+{
+    "name": "sinkcup/easemob-im",
+    "description": "环信即时通讯云PHP SDK composer版",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "sinkcup",
+            "homepage": "https://github.com/sinkcup",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Easemob\\": "src/"
+        }
+    },
+    "require": {
+        "ext-curl": "*"
+    }
+}
