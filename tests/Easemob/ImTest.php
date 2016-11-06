@@ -20,4 +20,16 @@ class ImTest extends PHPUnit_Framework_TestCase
             echo $e->getMessage();
         }
     }
+
+    public function testAddFriend()
+    {
+        $c = new \Easemob\Im($this->conf);
+        try{
+            $r = $c->addFriend('c2', 'c1');
+            $this->assertEquals(true, isset($r['entities']));
+        } catch (\Exception $e) {
+            echo $e->getCode();
+            echo $e->getMessage();
+        }
+    }
 }

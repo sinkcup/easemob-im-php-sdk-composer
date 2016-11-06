@@ -88,7 +88,7 @@ class Im
 
         $ch = curl_init();
         $options = array(
-            CURLOPT_URL => $this->conf['api_root'] . $this->conf['org_name'] . '/' . $this->conf['app_name'] . '/users',
+            CURLOPT_URL => $this->conf['api_of_app'] . '/users',
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
             CURLOPT_POSTFIELDS => json_encode($data),
@@ -98,6 +98,33 @@ class Im
         if (!empty($this->conf['access_token'])) {
             $options[CURLOPT_HTTPHEADER][] = 'Authorization: Bearer ' . $this->conf['access_token'];
         }
+        curl_setopt_array($ch, $options);
+        $r = curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if ($code == 200) {
+            return json_decode($r, true);
+        }
+        throw new Exception($r, $code);
+    }
+
+    /**
+     * 给 IM 用户添加好友
+     *
+     * @example curl -X POST -H "Authorization: Bearer YWMtP_8IisA-EeK-a5cNq4Jt3QAAAT7fI10IbPuKdRxUTjA9CNiZMnQIgk0LEU2" -i  "https://a1.easemob.com/easemob-demo/chatdemoui/users/jliu/contacts/users/yantao"
+     * @return boolean
+     */
+    public function addFriend($ownerUsername, $friendUsername)
+    {
+        $ch = curl_init();
+        $options = array(
+            CURLOPT_URL => $this->conf['api_of_app'] . '/users/' . $ownerUsername . '/contacts/users/' . $friendUsername,
+            CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+            CURLOPT_HEADER => false,
+            CURLOPT_RETURNTRANSFER => true,
+        );
+        $options[CURLOPT_HTTPHEADER][] = 'Authorization: Bearer ' . $this->conf['access_token'];
         curl_setopt_array($ch, $options);
         $r = curl_exec($ch);
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
