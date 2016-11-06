@@ -13,7 +13,7 @@ class ImTest extends PHPUnit_Framework_TestCase
     {
         $c = new \Easemob\Im($this->conf);
         try{
-            $r = $c->register('u' . time(), '123456');
+            $r = $c->register('c' . time(), '123456');
             $this->assertEquals(true, isset($r['entities']));
         } catch (\Exception $e) {
             echo $e->getCode();
@@ -25,7 +25,38 @@ class ImTest extends PHPUnit_Framework_TestCase
     {
         $c = new \Easemob\Im($this->conf);
         try{
-            $r = $c->addFriend('c2', 'c1');
+            $r = $c->addFriend('c3', 'c1');
+            $this->assertEquals(true, isset($r['entities']));
+        } catch (\Exception $e) {
+            echo $e->getCode();
+            echo $e->getMessage();
+        }
+    }
+
+    public function testSendMsg()
+    {
+        $c = new \Easemob\Im($this->conf);
+        try{
+            $r = $c->sendMsg(['c2', 'c3'],
+                [
+                    'type' => 'txt',
+                    'msg' => '欢迎使用',
+                ],
+                'c1'
+            );
+            $this->assertEquals(true, isset($r['entities']));
+        } catch (\Exception $e) {
+            echo $e->getCode();
+            echo $e->getMessage();
+        }
+    }
+
+    public function testGetMsgs()
+    {
+        $c = new \Easemob\Im($this->conf);
+        try{
+            $r = $c->getMsgs();
+            var_dump($r);
             $this->assertEquals(true, isset($r['entities']));
         } catch (\Exception $e) {
             echo $e->getCode();

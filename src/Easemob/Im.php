@@ -134,4 +134,73 @@ class Im
         }
         throw new Exception($r, $code);
     }
+
+    /**
+     * 发送文本消息
+     *
+     * @example curl -X POST -i -H "Authorization: Bearer YWMtxc6K0L1aEeKf9LWFzT9xEAAAAT7MNR_9OcNq-GwPsKwj_TruuxZfFSC2eIQ" "https://a1.easemob.com/easemob-demo/chatdemoui/messages" -d '{"target_type" : "users","target" : ["stliu1", "jma3", "stliu", "jma4"],"msg" : {"type" : "txt","msg" : "hello from rest"},"from" : "jma2"}'
+     * @return boolean
+     */
+    public function sendMsg($target, $msg, $from, $targetType = 'users')
+    {
+        $data = [
+            'target_type' => $targetType,
+            'target' => $target,
+            'msg' => $msg,
+            'from' => $from,
+        ];
+        $ch = curl_init();
+        $options = array(
+            CURLOPT_URL => $this->conf['api_of_app'] . '/messages',
+            CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+            CURLOPT_POSTFIELDS => json_encode($data),
+            CURLOPT_HEADER => false,
+            CURLOPT_RETURNTRANSFER => true,
+        );
+        $options[CURLOPT_HTTPHEADER][] = 'Authorization: Bearer ' . $this->conf['access_token'];
+        curl_setopt_array($ch, $options);
+        $r = curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if ($code == 200) {
+            return json_decode($r, true);
+        }
+        throw new Exception($r, $code);
+    }
+
+    /**
+     * 获取聊天记录
+     *
+     * @example curl -X GET -i -H "Authorization: Bearer YWMtxc6K0L1aEeKf9LWFzT9xEAAAAT7MNR_9OcNq-GwPsKwj_TruuxZfFSC2eIQ" "https://a1.easemob.com/easemob-demo/chatdemoui/chatmessages"
+     * @return boolean
+     */
+    public function getMsgs($ql = null, $limit = null, $cursor = null)
+    {
+        $data = [];
+        if (!empty($ql)) {
+            $data['ql'] = $ql;
+        }
+        if (!empty($limit)) {
+            $data['limit'] = $limit;
+        }
+        if (!empty($cursor)) {
+            $data['cursor'] = $cursor;
+        }
+        $ch = curl_init();
+        $options = array(
+            CURLOPT_URL => $this->conf['api_of_app'] . '/chatmessages?' . http_build_query($data),
+            CURLOPT_HEADER => false,
+            CURLOPT_RETURNTRANSFER => true,
+        );
+        $options[CURLOPT_HTTPHEADER][] = 'Authorization: Bearer ' . $this->conf['access_token'];
+        curl_setopt_array($ch, $options);
+        $r = curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if ($code == 200) {
+            return json_decode($r, true);
+        }
+        throw new Exception($r, $code);
+    }
 }
